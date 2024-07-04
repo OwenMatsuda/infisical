@@ -1,16 +1,17 @@
+import { CredentialType } from "@app/db/schemas";
+
 import { ActorAuthMethod, ActorType } from "../auth/auth-type";
 
-// Expand these as we increase the available credentials
-export enum CredentialLoginType {
-  type = "Login",
-  slug = "login"
-}
-
-export type CREDENTIAL = {
-  type: CredentialLoginType.type;
-  slug: CredentialLoginType.slug;
+export type CredentialData = {
+  name: string;
+  website: string;
   username: string;
   password: string;
+};
+
+export type Credential = {
+  type: CredentialType;
+  data: CredentialData;
 };
 
 export type TCreateCredentialDTO = {
@@ -18,6 +19,5 @@ export type TCreateCredentialDTO = {
   actorAuthMethod: ActorAuthMethod;
   actorId: string;
   actorOrgId?: string;
-  workspaceName: string;
-  credentials: CREDENTIAL;
+  credential: Credential;
 };
