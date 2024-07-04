@@ -53,6 +53,9 @@ import {
   TCertificateSecretsUpdate,
   TCertificatesInsert,
   TCertificatesUpdate,
+  TCredentialLogins,
+  TCredentialLoginsInsert,
+  TCredentialLoginsUpdate,
   TDynamicSecretLeases,
   TDynamicSecretLeasesInsert,
   TDynamicSecretLeasesUpdate,
@@ -645,6 +648,11 @@ declare module "knex/types/tables" {
       TKmsKeyVersions,
       TKmsKeyVersionsInsert,
       TKmsKeyVersionsUpdate
+    >;
+    [TableName.CredentialLogin]: KnexOriginal.CompositeTableType<
+      TCredentialLogins,
+      TCredentialLoginsInsert,
+      TCredentialLoginsUpdate
     >;
   }
 }

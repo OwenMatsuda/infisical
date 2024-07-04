@@ -94,7 +94,9 @@ export enum TableName {
   // KMS Service
   KmsServerRootConfig = "kms_root_config",
   KmsKey = "kms_keys",
-  KmsKeyVersion = "kms_key_versions"
+  KmsKeyVersion = "kms_key_versions",
+  // User Credentials
+  CredentialLogin = "credential_logins"
 }
 
 export type TImmutableDBKeys = "id" | "createdAt" | "updatedAt";
@@ -166,4 +168,8 @@ export enum IdentityAuthMethod {
   GCP_AUTH = "gcp-auth",
   AWS_AUTH = "aws-auth",
   AZURE_AUTH = "azure-auth"
+}
+
+export enum CredentialType {
+  Login = "login"
 }
