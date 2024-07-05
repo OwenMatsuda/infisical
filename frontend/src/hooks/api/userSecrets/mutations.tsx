@@ -1,6 +1,7 @@
 import { MutationOptions, useMutation } from "@tanstack/react-query";
 
 import { apiRequest } from "@app/config/request";
+import { queryClient } from "@app/reactQuery";
 
 import { TCreateUserSecretV3DTO, UserSecretType } from "./types";
 
@@ -24,6 +25,11 @@ export const useCreateUserSecretV3 = ({
       };
       const { data } = await apiRequest.post(`/api/v3/credentials/${name}`, reqBody);
       return data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(
+        ["getUserSecrets"]
+      );
     },
     ...options
   });

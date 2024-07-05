@@ -39,30 +39,23 @@ export const credentialsServiceFactory = ({
     );
     ForbiddenError.from(permission).throwUnlessCan(OrgPermissionActions.Create, OrgPermissionSubjects.Credentials);
 
-    const results = await credentialsDAL.transaction(async (tx) => {
-      switch (credential.type) {
-        case CredentialType.Login: {
-          const newCredential = await credentialsDAL.create(
-            {
-              orgId: organization.id,
-              userId: actorId,
-              name: credential.data.name,
-              website: credential.data.website,
-              username: credential.data.username,
-              password: credential.data.password
-            },
-            tx
-          );
+    switch (credential.type) {
+      case CredentialType.Login: {
+        const newCredential = await credentialsDAL.create({
+          orgId: organization.id,
+          userId: actorId,
+          name: credential.data.name,
+          website: credential.data.website,
+          username: credential.data.username,
+          password: credential.data.password
+        });
 
-          return { ...newCredential };
-        }
-        default: {
-          throw new Error("Invalid Credential Type");
-        }
+        return { ...newCredential };
       }
-    });
-
-    return results;
+      default: {
+        throw new Error("Invalid Credential Type");
+      }
+    }
   };
 
   const getCredentials = async ({ actor, actorId, actorOrgId, actorAuthMethod }: TGetCredentialsDTO) => {
@@ -77,12 +70,9 @@ export const credentialsServiceFactory = ({
     );
     ForbiddenError.from(permission).throwUnlessCan(OrgPermissionActions.Create, OrgPermissionSubjects.Credentials);
 
-    const results = await credentialsDAL.transaction(async (tx) => {
-      const credentials = await credentialsDAL.find({ orgId: organization.id, userId: actorId }, tx);
-      return credentials;
-    });
+    const credentials = await credentialsDAL.find({ orgId: organization.id, userId: actorId });
 
-    return results;
+    return credentials;
   };
 
   return { createCredential, getCredentials };
