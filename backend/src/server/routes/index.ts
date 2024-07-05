@@ -86,6 +86,8 @@ import { certificateAuthorityDALFactory } from "@app/services/certificate-author
 import { certificateAuthorityQueueFactory } from "@app/services/certificate-authority/certificate-authority-queue";
 import { certificateAuthoritySecretDALFactory } from "@app/services/certificate-authority/certificate-authority-secret-dal";
 import { certificateAuthorityServiceFactory } from "@app/services/certificate-authority/certificate-authority-service";
+import { credentialsDALFactory } from "@app/services/credentials/credentials-dal";
+import { credentialsServiceFactory } from "@app/services/credentials/credentials-service";
 import { groupProjectDALFactory } from "@app/services/group-project/group-project-dal";
 import { groupProjectMembershipRoleDALFactory } from "@app/services/group-project/group-project-membership-role-dal";
 import { groupProjectServiceFactory } from "@app/services/group-project/group-project-service";
@@ -202,6 +204,7 @@ export const registerRoutes = async (
   const superAdminDAL = superAdminDALFactory(db);
   const rateLimitDAL = rateLimitDALFactory(db);
   const apiKeyDAL = apiKeyDALFactory(db);
+  const credentialsDAL = credentialsDALFactory(db);
 
   const projectDAL = projectDALFactory(db);
   const projectMembershipDAL = projectMembershipDALFactory(db);
@@ -924,6 +927,12 @@ export const registerRoutes = async (
     oidcConfigDAL
   });
 
+  const credentialService = credentialsServiceFactory({
+    credentialsDAL,
+    orgDAL,
+    permissionService
+  });
+
   await superAdminService.initServerCfg();
   //
   // setup the communication with license key server
@@ -995,7 +1004,8 @@ export const registerRoutes = async (
     telemetry: telemetryService,
     projectUserAdditionalPrivilege: projectUserAdditionalPrivilegeService,
     identityProjectAdditionalPrivilege: identityProjectAdditionalPrivilegeService,
-    secretSharing: secretSharingService
+    secretSharing: secretSharingService,
+    credential: credentialService
   });
 
   const cronJobs: CronJob[] = [];
