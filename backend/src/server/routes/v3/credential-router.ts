@@ -2,7 +2,7 @@ import { z } from "zod";
 
 import { CredentialType } from "@app/db/schemas";
 import { CredentialLoginsSchema } from "@app/db/schemas/credential-logins";
-import { writeLimit } from "@app/server/config/rateLimiter";
+import { readLimit, writeLimit } from "@app/server/config/rateLimiter";
 import { verifyAuth } from "@app/server/plugins/auth/verify-auth";
 import { AuthMode } from "@app/services/auth/auth-type";
 
@@ -47,6 +47,30 @@ export const registerCredentialRouter = async (server: FastifyZodProvider) => {
       });
 
       return credential;
+    }
+  });
+
+  server.route({
+    url: "/",
+    method: "GET",
+    config: {
+      rateLimit: readLimit
+    },
+    schema: {
+      response: {
+        200: CredentialLoginsSchema.array()
+      }
+    },
+    onRequest: verifyAuth([AuthMode.JWT, AuthMode.API_KEY, AuthMode.SERVICE_TOKEN, AuthMode.IDENTITY_ACCESS_TOKEN]),
+    handler: async (req) => {
+      const credentials = await server.services.credential.getCredentials({
+        actorId: req.permission.id,
+        actor: req.permission.type,
+        actorAuthMethod: req.permission.authMethod,
+        actorOrgId: req.permission.orgId
+      });
+
+      return credentials;
     }
   });
 };

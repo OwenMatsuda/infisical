@@ -21,3 +21,10 @@ export type TCreateCredentialDTO = {
   actorOrgId?: string;
   credential: Credential;
 };
+
+export type TGetCredentialsDTO = {
+  actor: ActorType;
+  actorAuthMethod: ActorAuthMethod;
+  actorId: string;
+  actorOrgId?: string;
+};
